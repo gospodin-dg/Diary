@@ -6,6 +6,6 @@ import com.example.diary.database.NotesRepository
 class NotesApplication: Application() {
     override fun onCreate() {
         super.onCreate()
-        NotesRepository.newInstance(this)
+        NotesRepository.createRepository(this)
     }
 }

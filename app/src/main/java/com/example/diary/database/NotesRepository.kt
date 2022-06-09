@@ -19,12 +19,12 @@ class NotesRepository (context: Context) {
 
     companion object {
         private var INSTANCE: NotesRepository? = null
-        private fun createRepository(context: Context) {
+        fun createRepository(context: Context) {
             if (INSTANCE == null) {
                 INSTANCE = NotesRepository(context)
             }
         }
-        private fun getRepository(): NotesRepository {
+        fun getRepository(): NotesRepository {
             return INSTANCE?: throw IllegalStateException("Repository must be initialized")
         }
     }
