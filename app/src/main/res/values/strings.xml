@@ -2,4 +2,6 @@
     <string name="app_name">Дневник</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_note_menu_item"> Добавить запись </string>
+    <string name="delete_note_menu_item"> Удалить запись </string>
 </resources>

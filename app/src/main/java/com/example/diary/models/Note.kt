@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity(tableName = "notes")
-data class Note (@PrimaryKey val id: Int,
+data class Note (@PrimaryKey val id: UUID = UUID.randomUUID(),
             var title: String = "",
             var noteText: String = "",
             var date: Date = Date()

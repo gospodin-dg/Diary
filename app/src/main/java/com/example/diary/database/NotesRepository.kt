@@ -1,19 +1,18 @@
 package com.example.diary.database
 
-import android.app.Application
+
 import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.room.Database
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.example.diary.models.Note
-import kotlinx.coroutines.newSingleThreadContext
+import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "Notes"
+private const val TAG = "NotesRepository"
 
-class NotesRepository (context: Context) {
+class NotesRepository private constructor (context: Context) {
 
     private val executor: Executor = Executors.newSingleThreadExecutor()
 
@@ -25,7 +24,7 @@ class NotesRepository (context: Context) {
             }
         }
         fun getRepository(): NotesRepository {
-            return INSTANCE?: throw IllegalStateException("Repository must be initialized")
+            return INSTANCE ?: throw IllegalStateException("Repository must be initialized")
         }
     }
 
@@ -37,27 +36,27 @@ class NotesRepository (context: Context) {
 
     private val myDao = myDataBase.getDao()
 
-    private fun getNotesList(): LiveData<List<Note>> {
+    fun getNotesList(): LiveData<List<Note>> {
         return myDao.getNotesList()
     }
 
-    private fun getNote(id: Int): LiveData<Note?> {
+    fun getNote(id: UUID): LiveData<Note?> {
         return myDao.getNote(id)
     }
 
-    private fun createNote(note: Note) {
+    fun createNote(note: Note) {
         executor.execute {
             myDao.createNote(note)
         }
     }
 
-    private fun updateNote(note: Note) {
+    fun updateNote(note: Note) {
         executor.execute {
             myDao.updateNote(note)
         }
     }
 
-    private fun deleteNote(note: Note) {
+    fun deleteNote(note: Note) {
         executor.execute {
             myDao.deleteNote(note)
         }
