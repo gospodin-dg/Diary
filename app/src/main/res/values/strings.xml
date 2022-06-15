@@ -4,4 +4,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_note_menu_item"> Добавить запись </string>
     <string name="delete_note_menu_item"> Удалить запись </string>
+    <string name="update_note_menu_item"> Редактировать запись </string>
+    <string name="read_note_menu_item"> Открыть запись </string>
+    <string name="context_menu_note_title"> Меню записи </string>
+
+
 </resources>
