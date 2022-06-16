@@ -8,5 +8,15 @@
     <string name="read_note_menu_item"> Открыть запись </string>
     <string name="context_menu_note_title"> Меню записи </string>
 
+    <string name="choose_date"> Изменить дату </string>
+    <string name="choose_time"> Изменить время </string>
+    <string name="save_changes"> Сохранить изменения </string>
+
+    <string name="title_field_hint"> Название заметки </string>
+    <string name="description_field_hint"> Место для заметки </string>
+
+    <string name="save_changes_toast"> Изменения сохранены! </string>
+
+
 
 </resources>

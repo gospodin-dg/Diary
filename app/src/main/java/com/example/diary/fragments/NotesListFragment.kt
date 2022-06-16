@@ -1,5 +1,6 @@
 package com.example.diary.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.LinearLayout
@@ -36,10 +37,27 @@ class NotesListFragment : Fragment() {
     private var myAdapter: MyAdapter? = MyAdapter(emptyList())
     private var selectedNote: Note? = null
 
+    private var callback: Callbacks? = null
+
+    interface Callbacks {
+        fun onSelectedNoteForRead(noteId: UUID)
+        fun onSelectedNoteForUpdate(noteId: UUID)
+    }
+
     companion object {
         fun newInstance(): NotesListFragment {
             return NotesListFragment()
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callback = context as Callbacks?
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callback = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,8 +140,12 @@ class NotesListFragment : Fragment() {
 
             override fun onMenuItemClick(item: MenuItem?): Boolean {
                 when(item?.itemId) {
-                    //OPEN ->
-                    //UPDATE ->
+                    OPEN -> {
+                        callback?.onSelectedNoteForRead(note.id)
+                    }
+                    UPDATE -> {
+                        callback?.onSelectedNoteForUpdate(note.id)
+                    }
                     DELETE -> {
                         deleteNoteSelected(note)
                         return true
@@ -152,8 +174,6 @@ class NotesListFragment : Fragment() {
 
 
 
-
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.notes_list_menu, menu)
@@ -163,7 +183,9 @@ class NotesListFragment : Fragment() {
 
         when(item.itemId) {
             R.id.add_note -> {
-                createNote()
+                val note: Note = Note()
+                createNote(note)
+                callback?.onSelectedNoteForUpdate(note.id)
                 return true
             }
             R.id.delete_note -> {
@@ -180,8 +202,7 @@ class NotesListFragment : Fragment() {
         recyclerView.adapter = adapter
     }
 
-    private fun createNote() {
-        val note: Note = Note()
+    private fun createNote(note: Note) {
         myViewModel.addNote(note)
     }
 
