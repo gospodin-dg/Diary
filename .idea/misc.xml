@@ -4,6 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Programing/Android_Studio_Projects/Diary/app/src/main/res/drawable-anydpi/ic_action_add_note.xml" value="0.32407407407407407" />
+        <entry key="..\:/Programing/Android_Studio_Projects/Diary/app/src/main/res/drawable-anydpi/ic_action_delete_note.xml" value="0.37083333333333335" />
+        <entry key="..\:/Programing/Android_Studio_Projects/Diary/app/src/main/res/layout-land/fragment_editing_note_detail.xml" value="0.32864583333333336" />
+        <entry key="..\:/Programing/Android_Studio_Projects/Diary/app/src/main/res/layout-land/fragment_read_note_detail.xml" value="0.32864583333333336" />
         <entry key="..\:/Programing/Android_Studio_Projects/Diary/app/src/main/res/layout/activity_main.xml" value="0.3546875" />
         <entry key="..\:/Programing/Android_Studio_Projects/Diary/app/src/main/res/layout/fragment_editing_note_detail.xml" value="0.32054794520547947" />
         <entry key="..\:/Programing/Android_Studio_Projects/Diary/app/src/main/res/layout/fragment_notes_list.xml" value="0.3546875" />
