@@ -3,6 +3,7 @@ package com.example.diary.viewmodels
 import androidx.lifecycle.ViewModel
 import com.example.diary.database.NotesRepository
 import com.example.diary.models.Note
+import java.util.*
 
 private const val TAG = "NoteListViewModel"
 class NoteListViewModel: ViewModel() {
@@ -16,6 +17,10 @@ class NoteListViewModel: ViewModel() {
 
     fun deleteNote(note: Note) {
         repository.deleteNote(note)
+    }
+
+    fun getNote(id: UUID) {
+        repository.getNote(id)
     }
 
 }

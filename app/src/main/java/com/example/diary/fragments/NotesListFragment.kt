@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diary.R
@@ -33,9 +34,14 @@ class NotesListFragment : Fragment() {
         ViewModelProvider(this).get(NoteListViewModel::class.java)
     }
 
+
+    private lateinit var swapObject: ItemTouchHelper
+    private lateinit var currentNote: Note
+
+
+
     private lateinit var recyclerView: RecyclerView
     private var myAdapter: MyAdapter? = MyAdapter(emptyList())
-    private var selectedNote: Note? = null
 
     private var callback: Callbacks? = null
 
@@ -73,6 +79,8 @@ class NotesListFragment : Fragment() {
         binding = FragmentNotesListBinding.inflate(inflater, container, false)
         recyclerView = binding.recViewNotesList
         recyclerView.layoutManager = LinearLayoutManager(context)
+        swapObject = getSwap()
+        swapObject.attachToRecyclerView(recyclerView)
         recyclerView.adapter = myAdapter
         return binding.root
     }
@@ -89,18 +97,17 @@ class NotesListFragment : Fragment() {
         )
     }
 
-
-
-
-
     private inner class MyAdapter(private val listNotes: List<Note>): RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
+        fun getNoteAt(position: Int): Note {
+            return listNotes[position]
+        }
+
         private inner class MyViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener, View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
+
             private lateinit var note: Note
             private val titleNote: TextView = view.findViewById(R.id.note_title)
             private val createNoteDate: TextView = view.findViewById(R.id.note_create_date)
-            private var selectedItemCode: Int = -1
-
 
             init {
                 itemView.setOnCreateContextMenuListener(this)
@@ -113,18 +120,10 @@ class NotesListFragment : Fragment() {
                 createNoteDate.text = this.note.date.toString()
             }
 
+
+
             override fun onClick(v: View?) {
-                if (selectedItemCode == -1) {
-                    selectedNote = note
-                    v?.setBackgroundColor(resources.getColor(R.color.light_grey))
-                    selectedItemCode = 1
-                    notifyDataSetChanged()
-                } else {
-                    selectedNote = null
-                    selectedItemCode = -1
-                    v?.setBackgroundColor(resources.getColor(R.color.white))
-                    notifyDataSetChanged()
-                }
+                callback?.onSelectedNoteForRead(note.id)
             }
 
             override fun onCreateContextMenu(
@@ -188,18 +187,14 @@ class NotesListFragment : Fragment() {
                 callback?.onSelectedNoteForUpdate(note.id)
                 return true
             }
-            R.id.delete_note -> {
-                selectedNote?.let { deleteNoteSelected(it) }
-                return true
-            }
             else -> return super.onOptionsItemSelected(item)
         }
 
     }
 
     private  fun updateUI(notes: List<Note>) {
-        val adapter = MyAdapter(notes)
-        recyclerView.adapter = adapter
+        myAdapter = MyAdapter(notes)
+        recyclerView.adapter = myAdapter
     }
 
     private fun createNote(note: Note) {
@@ -208,6 +203,25 @@ class NotesListFragment : Fragment() {
 
     private fun deleteNoteSelected(note: Note) {
         myViewModel.deleteNote(note)
+    }
+
+    fun getSwap(): ItemTouchHelper {
+        return ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                //myViewModel.deleteNote(note)
+                myAdapter?.getNoteAt(viewHolder.absoluteAdapterPosition)
+                    ?.let { myViewModel.deleteNote(it) }
+            }
+
+        })
     }
 
 }
