@@ -2,12 +2,14 @@ package com.example.diary.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import android.widget.LinearLayout
+
+
 import android.widget.TextView
-import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.appcompat.widget.SearchView
+
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -34,12 +36,7 @@ class NotesListFragment : Fragment() {
         ViewModelProvider(this).get(NoteListViewModel::class.java)
     }
 
-
     private lateinit var swapObject: ItemTouchHelper
-    private lateinit var currentNote: Note
-
-
-
     private lateinit var recyclerView: RecyclerView
     private var myAdapter: MyAdapter? = MyAdapter(emptyList())
 
@@ -82,6 +79,7 @@ class NotesListFragment : Fragment() {
         swapObject = getSwap()
         swapObject.attachToRecyclerView(recyclerView)
         recyclerView.adapter = myAdapter
+        initSearchView()
         return binding.root
     }
 
@@ -95,6 +93,8 @@ class NotesListFragment : Fragment() {
                }
             }
         )
+
+
     }
 
     private inner class MyAdapter(private val listNotes: List<Note>): RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
@@ -119,8 +119,6 @@ class NotesListFragment : Fragment() {
                 titleNote.text = this.note.title
                 createNoteDate.text = this.note.date.toString()
             }
-
-
 
             override fun onClick(v: View?) {
                 callback?.onSelectedNoteForRead(note.id)
@@ -170,9 +168,6 @@ class NotesListFragment : Fragment() {
 
     }
 
-
-
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.notes_list_menu, menu)
@@ -182,7 +177,7 @@ class NotesListFragment : Fragment() {
 
         when(item.itemId) {
             R.id.add_note -> {
-                val note: Note = Note()
+                val note = Note()
                 createNote(note)
                 callback?.onSelectedNoteForUpdate(note.id)
                 return true
@@ -205,7 +200,7 @@ class NotesListFragment : Fragment() {
         myViewModel.deleteNote(note)
     }
 
-    fun getSwap(): ItemTouchHelper {
+    private fun getSwap(): ItemTouchHelper {
         return ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -216,11 +211,33 @@ class NotesListFragment : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                //myViewModel.deleteNote(note)
                 myAdapter?.getNoteAt(viewHolder.absoluteAdapterPosition)
                     ?.let { myViewModel.deleteNote(it) }
             }
 
+        })
+    }
+
+    private fun initSearchView() {
+        binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null) {
+                    searchNotes(newText)
+                }
+                return true
+            }
+        })
+    }
+
+    private fun searchNotes(title: String) {
+        val search = "%$title%"
+        myViewModel.searchNotes(search).observe(viewLifecycleOwner, Observer {
+            list ->
+            updateUI(list)
         })
     }
 

@@ -12,9 +12,12 @@ interface MyDao {
     fun getNote(id: UUID): LiveData<Note?>
 
     @Query("SELECT * FROM notes")
-    fun getNotesList(): LiveData<List<Note>>
+    fun getAllNotesList(): LiveData<List<Note>>
 
-    @Insert
+    @Query("SELECT * FROM notes WHERE title LIKE :title ")
+    fun getSearchNotesList(title: String?): LiveData<List<Note>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun createNote(note: Note)
 
     @Update

@@ -36,8 +36,8 @@ class NotesRepository private constructor (context: Context) {
 
     private val myDao = myDataBase.getDao()
 
-    fun getNotesList(): LiveData<List<Note>> {
-        return myDao.getNotesList()
+    fun getAllNotesList(): LiveData<List<Note>> {
+        return myDao.getAllNotesList()
     }
 
     fun getNote(id: UUID): LiveData<Note?> {
@@ -62,4 +62,8 @@ class NotesRepository private constructor (context: Context) {
         }
     }
 
+    fun getSearchNotesList(title: String?): LiveData<List<Note>> {
+        return myDao.getSearchNotesList(title)
+    }
 }
+

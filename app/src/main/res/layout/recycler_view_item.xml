@@ -3,8 +3,8 @@
     android:id="@+id/lin_lay_recyclerview_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginBottom="0dp"
     android:background="@android:drawable/editbox_background"
     android:backgroundTint="@color/light_blue"
     android:orientation="vertical">
