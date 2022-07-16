@@ -29,7 +29,7 @@ private const val UPDATE = 102
 private const val CREATE = 100
 private const val DELETE = 103
 
-class NotesListFragment : Fragment() {
+class NotesListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private lateinit var binding: FragmentNotesListBinding
     private val myViewModel: NoteListViewModel by lazy {
@@ -79,7 +79,6 @@ class NotesListFragment : Fragment() {
         swapObject = getSwap()
         swapObject.attachToRecyclerView(recyclerView)
         recyclerView.adapter = myAdapter
-        initSearchView()
         return binding.root
     }
 
@@ -171,6 +170,9 @@ class NotesListFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.notes_list_menu, menu)
+        val search = menu.findItem(R.id.search_notes)
+        val searchView = search.actionView as SearchView
+        searchView.setOnQueryTextListener(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -184,7 +186,6 @@ class NotesListFragment : Fragment() {
             }
             else -> return super.onOptionsItemSelected(item)
         }
-
     }
 
     private  fun updateUI(notes: List<Note>) {
@@ -218,20 +219,18 @@ class NotesListFragment : Fragment() {
         })
     }
 
-    private fun initSearchView() {
-        binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
-            }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null) {
-                    searchNotes(newText)
-                }
-                return true
-            }
-        })
+    override fun onQueryTextSubmit(newText: String?): Boolean {
+        return true
     }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        if (newText != null) {
+            searchNotes(newText)
+        }
+        return true
+    }
+
 
     private fun searchNotes(title: String) {
         val search = "%$title%"

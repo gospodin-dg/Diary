@@ -16,6 +16,7 @@
     <string name="description_field_hint"> Место для заметки </string>
 
     <string name="save_changes_toast"> Изменения сохранены! </string>
+    <string name="search_title"> Поиск… </string>
 
 
 
